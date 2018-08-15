@@ -24,7 +24,7 @@
 #
 #   EXAMPLE
 #
-# python main.py -v 10 -s abbcw17 -t check3537987
+# python main.py -v 10 -s abbcw17 -t check3537987 -p proxylist.txt
 #
 #
 import os,sys,requests
@@ -40,7 +40,7 @@ class Main:
     # GLOBAL VARIABLES
     proxyListFile = ""
     saveStateFile = "saveState.txt"
-    proxyTimeout = 1 # Seconds
+    proxyTimeout = 10 # Seconds
     currentProxyPointer = 0
     successfulVotes = 0
 
