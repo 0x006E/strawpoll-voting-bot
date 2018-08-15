@@ -40,7 +40,7 @@ class Main:
     # GLOBAL VARIABLES
     proxyListFile = ""
     saveStateFile = "saveState.txt"
-    proxyTimeout = 10 # Seconds
+    proxyTimeout = 5 # Seconds
     currentProxyPointer = 0
     successfulVotes = 0
 
@@ -183,7 +183,7 @@ class Main:
 
     def sendToWebApi(self, httpsProxy):
         try:
-            headers = \
+            postHeaders = \
                 {
                     'Host': 'strawpoll.com',
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0',
@@ -198,15 +198,14 @@ class Main:
                     'Pragma' : 'no-cache',
                     'Connection': 'close'
                 }
+            getHeader = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0'}
             payload = {'pid': self.surveyId, 'oids': self.voteFor}
             proxyDictionary = {"https": httpsProxy}
 
             # Connect to server
-            s = requests.Session()
-            s.get("https://www.strawpoll.com/" + self.surveyId)
-            r = s.post('https://strawpoll.com/vote', data=payload, headers=headers, proxies=proxyDictionary, timeout=self.proxyTimeout)
-            json = r.json()
-            s.close()
+            r1 = requests.get("https://strawpoll.com/" + self.surveyId, headers=getHeader, proxies=proxyDictionary, timeout=self.proxyTimeout )
+            r2 = requests.post('https://strawpoll.com/vote', cookies=r1.cookies, data=payload, headers=postHeaders, proxies=proxyDictionary, timeout=self.proxyTimeout)
+            json = r2.json()
 
             # Check if succeeded
             if(bool(json['success'])):
